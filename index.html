@@ -1,0 +1,1414 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AquaElite</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+</head>
+<body>
+  <style>
+      @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Raleway:wght@300;500;700&display=swap');
+    
+    :root {
+      --primary: #1a6ea0;
+      --secondary: #35c0ed;
+      --accent: #05d1fb;
+      --dark: #003355;
+      --light: #e0f7ff;
+      --white: #ffffff;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background-color: var(--light);
+      overflow-x: hidden;
+    }
+    
+    /* Header styles */
+    header {
+      background: linear-gradient(to right, var(--dark), var(--primary));
+      padding: 1rem 5%;
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease;
+    }
+    
+    header.hidden {
+      transform: translateY(-100%);
+    }
+    
+    .header-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .logo {
+      display: flex;
+      align-items: center;
+    }
+    
+    .logo-icon {
+      color: var(--accent);
+      font-size: 2.5rem;
+      margin-right: 0.5rem;
+    }
+    
+    .logo-text {
+      color: var(--white);
+      font-size: 1.5rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    .title-container {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    
+    .main-title {
+      color: var(--white);
+      font-family: 'Raleway', sans-serif;
+      font-weight: 700;
+      font-size: 2rem;
+      text-align: center;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+    
+    /* Right Menu Toggle Button */
+    .menu-toggle {
+      position: relative;
+      color: var(--white);
+      font-size: 1.5rem;
+      cursor: pointer;
+      z-index: 1100;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: none;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 4px;
+      transition: all 0.3s ease;
+    }
+    
+    .menu-toggle:hover {
+      background-color: rgba(173, 206, 255, 0.233);
+    }
+    
+    .menu-toggle span {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1rem;
+      font-weight: 500;
+    }
+    
+    /* Right Side Menu */
+    .right-menu {
+      position: fixed;
+      top: 0;
+      right: -300px;
+      width: 300px;
+      height: 100vh;
+      background: linear-gradient(135deg, var(--primary), var(--dark));
+      z-index: 1050;
+      box-shadow: -2px 0 10px rgba(0, 33, 182, 0.568);
+      transition: right 0.3s ease;
+      padding: 2rem 0;
+      overflow-y: auto;
+    }
+    
+    .right-menu.active {
+      right: 0;
+    }
+    
+    .menu-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 1.5rem 1.5rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.651);
+      margin-bottom: 1.5rem;
+    }
+    
+    .menu-close {
+      color: var(--white);
+      font-size: 1.5rem;
+      cursor: pointer;
+      transition: color 0.3s ease;
+    }
+    
+    .menu-close:hover {
+      color: var(--accent);
+    }
+    
+    .right-menu-list {
+      list-style: none;
+    }
+    
+    .right-menu-item {
+      position: relative;
+    }
+    
+    .right-menu-link {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 1.5rem;
+      color: var(--white);
+      text-decoration: none;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+    
+    .right-menu-link:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+      color: var(--accent);
+    }
+    
+    .right-submenu {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+      background-color: rgba(0, 0, 0, 0.1);
+    }
+    
+    .right-submenu.active {
+      max-height: 1000px;
+    }
+    
+    .right-submenu-item {
+      display: block;
+      padding: 0.75rem 2.5rem;
+      color: var(--light);
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+    }
+    
+    .right-submenu-item:hover {
+      background-color: rgba(255, 255, 255, 0.05);
+      color: var(--accent);
+    }
+    
+    /* Overlay */
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 1049;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+    
+    .overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+    
+    /* Hero section */
+    .hero {
+      margin-top: 5rem;
+      height: 90vh;
+      display: flex;
+      overflow: hidden;
+      opacity: 0;
+      animation: fadeIn 1.5s ease forwards;
+    }
+    
+    .hero-image {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .hero-image::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 25%;
+      height: 100%;
+      background: linear-gradient(to right, rgba(255, 255, 255, 0), rgb(255, 255, 255));
+    }
+    
+    .hero-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+    
+    .hero-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background-color: var(--white);
+      padding: 2rem;
+    }
+    
+    .hero-title {
+      font-family: 'Raleway', sans-serif;
+      font-size: 3.5rem;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 1.5rem;
+      text-align: center;
+      line-height: 1.2;
+      position: relative;
+      text-transform: uppercase;
+    }
+    
+    .hero-title::before {
+      content: '';
+      position: absolute;
+      width: 80px;
+      height: 6px;
+      background: linear-gradient(to right, var(--secondary), var(--accent));
+      bottom: -15px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-radius: 3px;
+    }
+    
+    .hero-title span {
+      display: block;
+      background: linear-gradient(to right, var(--primary), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      color: transparent;
+    }
+    
+    /* NUEVA SECCIÓN DE CARDS */
+    .services-section {
+      padding: 5rem 5%;
+      background-color: var(--white);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .services-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('/api/placeholder/1600/900') center/cover no-repeat;
+      opacity: 0.05;
+      z-index: 0;
+    }
+    
+    .section-heading {
+      text-align: center;
+      margin-bottom: 3rem;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .section-title {
+      font-family: 'Raleway', sans-serif;
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+    }
+    
+    .section-subtitle {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1.1rem;
+      color: var(--primary);
+      max-width: 600px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+    
+    .section-title::after {
+      content: '';
+      display: block;
+      width: 80px;
+      height: 4px;
+      background: linear-gradient(to right, var(--secondary), var(--accent));
+      margin: 1rem auto 0;
+      border-radius: 2px;
+    }
+    
+    .cards-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .card {
+      background-color: var(--white);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0, 51, 85, 0.1);
+      transition: all 0.4s ease;
+      position: relative;
+      transform: translateY(30px);
+      opacity: 0;
+      animation: cardFadeIn 0.6s ease forwards;
+    }
+    
+    .card:hover {
+      transform: translateY(-10px) !important;
+      box-shadow: 0 15px 35px rgba(0, 51, 85, 0.2);
+    }
+    
+    @keyframes cardFadeIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .card:nth-child(1) { animation-delay: 0.1s; }
+    .card:nth-child(2) { animation-delay: 0.3s; }
+    .card:nth-child(3) { animation-delay: 0.5s; }
+    .card:nth-child(4) { animation-delay: 0.7s; }
+    
+    .card-image {
+      height: 200px;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .card-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.8s ease;
+    }
+    
+    .card:hover .card-image img {
+      transform: scale(1.1);
+    }
+    
+    .card-image::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 50%;
+      background: linear-gradient(to top, rgba(0, 51, 85, 0.8), rgba(0, 51, 85, 0));
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+    
+    .card:hover .card-image::after {
+      opacity: 1;
+    }
+    
+    .card-content {
+      padding: 1.5rem;
+      position: relative;
+    }
+    
+    .card-title {
+      font-family: 'Raleway', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 0.5rem;
+      position: relative;
+      transition: color 0.3s ease;
+    }
+    
+    .card:hover .card-title {
+      color: var(--primary);
+    }
+    
+    .card-title::before {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 40px;
+      height: 3px;
+      background: linear-gradient(to right, var(--secondary), var(--accent));
+      transition: width 0.3s ease;
+    }
+    
+    .card:hover .card-title::before {
+      width: 60px;
+    }
+    
+    .card-text {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      color: #555;
+      margin-bottom: 1.2rem;
+    }
+    
+    .card-link {
+      display: inline-flex;
+      align-items: center;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--primary);
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+    
+    .card-link i {
+      margin-left: 5px;
+      transition: transform 0.3s ease;
+    }
+    
+    .card:hover .card-link {
+      color: var(--accent);
+    }
+    
+    .card:hover .card-link i {
+      transform: translateX(5px);
+    }
+    
+    /* Scroll to top button */
+    .scroll-top {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background-color: var(--primary);
+      color: var(--white);
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.5rem;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(20px);
+      transition: all 0.3s ease;
+    }
+    
+    .scroll-top.active {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+    
+    .scroll-top:hover {
+      background-color: var(--secondary);
+    }
+    
+    /* Animations */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    /* Media queries */
+    @media (max-width: 992px) {
+      .right-menu {
+        width: 80%;
+        max-width: 300px;
+        right: -80%;
+      }
+      
+      .main-title {
+        font-size: 1.5rem;
+      }
+      
+      .hero {
+        flex-direction: column;
+        height: auto;
+      }
+      
+      .hero-image, .hero-content {
+        flex: none;
+        height: 50vh;
+      }
+      
+      .hero-image::after {
+        width: 100%;
+        height: 30%;
+        background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
+        top: auto;
+        bottom: 0;
+      }
+      
+      .hero-title {
+        font-size: 2.5rem;
+      }
+      
+      .section-title {
+        font-size: 2rem;
+      }
+      
+      .cards-container {
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .cards-container {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+    
+    @media (max-width: 576px) {
+      .cards-container {
+        grid-template-columns: 1fr;
+      }
+      
+      .section-title {
+        font-size: 1.8rem;
+      }
+    }
+    
+    .programs-section {
+        padding: 6rem 5%;
+        background: linear-gradient(135deg, #f0f9ff, #e1f5fe);
+        position: relative;
+        overflow: hidden;
+      }
+      
+      .programs-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: url('/api/placeholder/1600/900') center/cover no-repeat;
+        opacity: 0.05;
+        z-index: 0;
+      }
+      
+      .programs-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 2.5rem;
+        margin-top: 3rem;
+        position: relative;
+        z-index: 1;
+      }
+      
+      .program-box {
+        height: 280px;
+        perspective: 1000px;
+        cursor: pointer;
+        position: relative;
+        transform-style: preserve-3d;
+        transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 12px 30px rgba(0, 51, 85, 0.12);
+        border-radius: 12px;
+        overflow: hidden;
+        animation: programFadeIn 0.8s ease forwards;
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      
+      @keyframes programFadeIn {
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      
+      .program-box:nth-child(1) { animation-delay: 0.1s; }
+      .program-box:nth-child(2) { animation-delay: 0.3s; }
+      .program-box:nth-child(3) { animation-delay: 0.5s; }
+      .program-box:nth-child(4) { animation-delay: 0.7s; }
+      
+      .program-box:hover {
+        transform: rotateY(180deg);
+      }
+      
+      .program-front,
+      .program-back {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        backface-visibility: hidden;
+        border-radius: 12px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 2rem;
+        text-align: center;
+      }
+      
+      .program-front {
+        background-color: var(--white);
+        border-bottom: 5px solid var(--primary);
+        transition: all 0.3s ease;
+      }
+      
+      .program-back {
+        background: linear-gradient(145deg, var(--primary), var(--dark));
+        color: var(--white);
+        transform: rotateY(180deg);
+        overflow-y: auto;
+        padding: 1.5rem;
+        text-align: left;
+      }
+      
+      .program-icon {
+        font-size: 3.5rem;
+        color: var(--primary);
+        margin-bottom: 1.5rem;
+        transition: all 0.3s ease;
+      }
+      
+      .program-title {
+        font-family: 'Raleway', sans-serif;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--dark);
+        margin-bottom: 0.5rem;
+        position: relative;
+        transition: all 0.3s ease;
+      }
+      
+      .program-back .program-title {
+        color: var(--white);
+        margin-bottom: 1rem;
+        font-size: 1.3rem;
+        position: relative;
+      }
+      
+      .program-back .program-title::after {
+        content: '';
+        position: absolute;
+        bottom: -8px;
+        left: 0;
+        width: 50px;
+        height: 3px;
+        background: var(--accent);
+        border-radius: 3px;
+      }
+      
+      .program-description {
+        font-size: 0.9rem;
+        line-height: 1.6;
+        margin-bottom: 1.2rem;
+        color: rgba(255, 255, 255, 0.9);
+      }
+      
+      .program-features {
+        list-style: none;
+        margin-bottom: 1.5rem;
+        width: 100%;
+      }
+      
+      .program-features li {
+        display: flex;
+        align-items: center;
+        margin-bottom: 0.5rem;
+        font-size: 0.85rem;
+        color: rgba(255, 255, 255, 0.85);
+      }
+      
+      .program-features li i {
+        color: var(--accent);
+        margin-right: 0.5rem;
+        font-size: 0.9rem;
+      }
+      
+      .program-button {
+        display: inline-block;
+        background-color: var(--accent);
+        color: var(--white);
+        padding: 0.5rem 1.2rem;
+        border-radius: 30px;
+        text-decoration: none;
+        font-weight: 400;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+        border: 2px solid var(--accent);
+        margin-top: auto;
+      }
+      
+      .program-button:hover {
+        background-color: transparent;
+        color: var(--white);
+      }
+      
+        .programs-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 2.5rem;
+        margin-top: 3rem;
+        position: relative;
+        z-index: 1;
+      }
+      
+      .program-box {
+        position: relative;
+        height: 350px;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 12px 30px rgba(0, 51, 85, 0.15);
+        animation: programFadeIn 0.8s ease forwards;
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      
+      .program-image {
+        position: relative;
+        width: 100%;
+        height: 100%;
+      }
+      
+      .program-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+      }
+      
+      .program-box:hover .program-image img {
+        transform: scale(1.1);
+      }
+      
+      .program-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(to top, rgba(0, 51, 85, 0.9) 0%, rgba(0, 51, 85, 0.4) 50%, rgba(0, 51, 85, 0.2) 100%);
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        padding: 2rem;
+        transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      
+      .program-title {
+        font-family: 'Raleway', sans-serif;
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--white);
+        margin-bottom: 0.5rem;
+        transition: transform 0.5s ease, opacity 0.5s ease;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+      }
+      
+      .program-info {
+        opacity: 0;
+        transform: translateY(20px);
+        height: 0;
+        overflow: hidden;
+        transition: all 0.5s ease;
+      }
+      
+      .program-box:hover .program-overlay {
+        background: linear-gradient(to top, rgba(0, 51, 85, 0.95) 70%, rgba(0, 51, 85, 0.8) 100%);
+      }
+      
+      .program-box:hover .program-title {
+        transform: translateY(-10px);
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+      }
+      
+      .program-box:hover .program-info {
+        opacity: 1;
+        transform: translateY(0);
+        height: auto;
+      }
+      
+      .info-title {
+        font-family: 'Raleway', sans-serif;
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: var(--white);
+        margin-bottom: 0.8rem;
+        position: relative;
+        display: none;
+      }
+      
+      .program-description {
+        font-size: 0.9rem;
+        line-height: 1.6;
+        margin-bottom: 1rem;
+        color: rgba(255, 255, 255, 0.9);
+      }
+      
+      .program-features {
+        list-style: none;
+        margin-bottom: 1.5rem;
+        width: 100%;
+      }
+      
+      .program-features li {
+        display: flex;
+        align-items: center;
+        margin-bottom: 0.5rem;
+        font-size: 0.85rem;
+        color: rgba(255, 255, 255, 0.85);
+      }
+      
+      .program-features li i {
+        color: var(--accent);
+        margin-right: 0.5rem;
+        font-size: 0.9rem;
+      }
+      
+      .program-button {
+        display: inline-block;
+        background-color: var(--accent);
+        color: var(--white);
+        padding: 0.5rem 1.2rem;
+        border-radius: 30px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+        border: 2px solid var(--accent);
+        margin-top: 0.5rem;
+      }
+      
+      .program-button:hover {
+        background-color: transparent;
+        color: var(--white);
+      }
+      
+      /* Media queries para responsividad */
+      @media (max-width: 992px) {
+        .programs-container {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      
+      @media (max-width: 768px) {
+        .programs-container {
+          grid-template-columns: 1fr;
+          max-width: 450px;
+          margin-left: auto;
+          margin-right: auto;
+        }
+        
+        .program-box {
+          height: 350px;
+        }
+        
+        .program-overlay {
+          padding: 1.5rem;
+        }
+      }
+      
+      /* Animación para los elementos cuando entran en el viewport */
+      .program-box.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+  </style>
+  <!-- Encabezado con logotipo y alternancia de menú a la derecha -->
+  <header id="header">
+    <div class="header-container">
+      <div class="logo">
+        <div class="logo-icon">
+          <i class="fas fa-water"></i>
+        </div>
+        <div class="logo-text">AquaElite</div>
+      </div>
+      
+      <div class="title-container">
+        <h1 class="main-title">Nadadores de Alto Rendimiento</h1>
+      </div>
+      
+      <button class="menu-toggle" id="menuToggle">
+        <span>MENU</span>
+        <i class="fas fa-bars"></i>
+      </button>
+    </div>
+  </header>
+  
+  <!-- Menú lateral derecho -->
+  <div class="right-menu" id="rightMenu">
+    <div class="menu-header">
+      <div class="logo">
+        <div class="logo-icon">
+          <i class="fas fa-water"></i>
+        </div>
+        <div class="logo-text">Aqua</div>
+      </div>
+      <div class="menu-close" id="menuClose">
+        <i class="fas fa-times"></i>
+      </div>
+    </div>
+    
+    <ul class="right-menu-list">
+      <li class="right-menu-item">
+        <a href="#" class="right-menu-link">Inicio</a>
+      </li>
+      
+      <li class="right-menu-item">
+        <a href="#" class="right-menu-link" id="programsToggle">
+          Programas
+          <i class="fas fa-chevron-down"></i>
+        </a>
+        <div class="right-submenu" id="programsSubmenu">
+          <a href="#" class="right-submenu-item">Competencias</a>
+          <a href="#" class="right-submenu-item">Nado cincronizado</a>
+          <a href="#" class="right-submenu-item">Clavado/a>
+          <a href="#" class="right-submenu-item">Principiantes</a>
+        </div>
+      </li>
+      
+      <li class="right-menu-item">
+        <a href="#" class="right-menu-link" id="schedulesToggle">
+          Horarios
+          <i class="fas fa-chevron-down"></i>
+        </a>
+        <div class="right-submenu" id="schedulesSubmenu">
+          <a href="#" class="right-submenu-item">Clases matutinas</a>
+          <a href="#" class="right-submenu-item">Clases vespertinas</a>
+          <a href="#" class="right-submenu-item">Fines de semana</a>
+        </div>
+      </li>
+      
+      <li class="right-menu-item">
+        <a href="#" class="right-menu-link">Instalaciones</a>
+      </li>
+      
+      <li class="right-menu-item">
+        <a href="#" class="right-menu-link">Instructores</a>
+      </li>
+      
+      <li class="right-menu-item">
+        <a href="#" class="right-menu-link">Precios</a>
+      </li>
+      
+      <li class="right-menu-item">
+        <a href="#" class="right-menu-link">Galería</a>
+      </li>
+      
+      <li class="right-menu-item">
+        <a href="#" class="right-menu-link">Contacto</a>
+      </li>
+    </ul>
+  </div>
+  
+  <!-- Superposición para el fondo del menú -->
+  <div class="overlay" id="overlay"></div>
+  
+  <!-- Sección de héroe con imagen dividida y texto -->
+  <section class="hero">
+    <div class="hero-image">
+      <img src="img/image.jpg" alt="Natación profesional">
+    </div>
+    <div class="hero-content">
+      <h2 class="hero-title">
+        <span>Impulsa</span>
+        <span>tus límites</span>
+      </h2>
+    </div>
+  </section>
+  
+  <!-- NUEVA SECCIÓN DE CARDS -->
+  <section class="services-section">
+    <div class="section-heading">
+      <h2 class="section-title">Nuestros Programas</h2>
+      <p class="section-subtitle">Descubre los distintos Estilos de entrenamiento que ofrecemos para todos los niveles y edades</p>
+    </div>
+    
+    <div class="cards-container">
+      <!-- Card 1 -->
+      <div class="card">
+        <div class="card-image">
+          <img src="img/libre.jpg" alt="Natación para principiantes">
+        </div>
+        <div class="card-content">
+          <h3 class="card-title">Esilo CROL</h3>
+          <p class="card-text">El estilo libre, comúnmente conocido como crol, es el estilo más rápido y popular en la natación competitiva. En este estilo, los/as nadadores/as se desplazan boca abajo en el agua y realizan un movimiento alternado de brazos, mientras las piernas realizan un movimiento de patada ondulante.</p>
+          <a href="#" class="card-link">Conocer más <i class="fas fa-chevron-right"></i></a>
+        </div>
+      </div>
+      
+      <!-- Card 2 -->
+      <div class="card">
+        <div class="card-image">
+          <img src="img/mariposa.jpg" alt="Natación intermedia">
+        </div>
+        <div class="card-content">
+          <h3 class="card-title">Estilo MARIPOSA</h3>
+          <p class="card-text">El estilo mariposa en natación, también conocido como "delfín", es una técnica de natación donde los brazos se mueven juntos por encima del agua y se traccionan simultáneamente bajo el agua, combinada con una patada de delfín. Es uno de los estilos más exigentes y visualmente llamativos en natación. </p>
+          <a href="#" class="card-link">Conocer más <i class="fas fa-chevron-right"></i></a>
+        </div>
+      </div>
+      
+      <!-- Card 3 -->
+      <div class="card">
+        <div class="card-image">
+          <img src="img/pecho.jpg" alt="Alto rendimiento">
+        </div>
+        <div class="card-content">
+          <h3 class="card-title">Estilo PECHO</h3>
+          <p class="card-text">El estilo pecho, también conocido como braza, es un estilo de natación donde el nadador se desliza sobre el pecho y realiza una serie de movimientos coordinados de brazos y piernas. En este estilo, la cabeza se mantiene generalmente bajo el agua, excepto para respirar. </p>
+          <a href="#" class="card-link">Conocer más <i class="fas fa-chevron-right"></i></a>
+        </div>
+      </div>
+      
+      <!-- Card 4 -->
+      <div class="card">
+        <div class="card-image">
+          <img src="img/espalda.jpg" alt="Natación terapéutica">
+        </div>
+        <div class="card-content">
+          <h3 class="card-title">Estilo ESPALDA</h3>
+          <p class="card-text">El estilo espalda es un estilo de natación en el que el nadador flota boca arriba, impulsándose con sus brazos y piernas. Es similar al crol, pero en el estilo espalda el nadador está de espaldas al agua. </p>
+          <a href="#" class="card-link">Conocer más <i class="fas fa-chevron-right"></i></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- NUEVA SECCIÓN DE PROGRAMAS DE NATACIÓN -->
+<section class="programs-section" id="programas">
+    <div class="section-heading">
+      <h2 class="section-title">Programas Especializados</h2>
+      <p class="section-subtitle">Descubre nuestros programas especiales para todos los niveles y objetivos</p>
+    </div>
+    
+    <div class="programs-container">
+      <!-- Programa 1: Competencias -->
+      <div class="program-box" id="competencias">
+        <div class="program-image">
+          <img src="img/competencias.jpg" alt="Programa de Competencias">
+          <div class="program-overlay">
+            <h3 class="program-title">Competencias</h3>
+            <div class="program-info">
+              <h3 class="info-title">Programa de Competencias</h3>
+              <p class="program-description">
+                Entrenamiento intensivo para nadadores que desean participar en competencias a nivel local, nacional e internacional. Incluye técnicas avanzadas, entrenamiento de resistencia y estrategias de competición.
+              </p>
+              <ul class="program-features">
+                <li><i class="fas fa-check-circle"></i> Entrenamiento 5 días a la semana</li>
+                <li><i class="fas fa-check-circle"></i> Preparación física personalizada</li>
+                <li><i class="fas fa-check-circle"></i> Análisis de video para mejorar técnica</li>
+                <li><i class="fas fa-check-circle"></i> Participación en torneos regionales</li>
+              </ul>
+              <a href="#" class="program-button">Inscribirme</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Programa 2: Nado Sincronizado -->
+      <div class="program-box" id="sincronizado">
+        <div class="program-image">
+          <img src="img/sincronizado.jpg" alt="Nado Sincronizado">
+          <div class="program-overlay">
+            <h3 class="program-title">Nado Sincronizado</h3>
+            <div class="program-info">
+              <h3 class="info-title">Nado Sincronizado</h3>
+              <p class="program-description">
+                Una combinación perfecta de natación, gimnasia y danza. Nuestro programa de nado sincronizado desarrolla fuerza, flexibilidad, resistencia, gracia y precisión en el agua.
+              </p>
+              <ul class="program-features">
+                <li><i class="fas fa-check-circle"></i> Clases para todas las edades</li>
+                <li><i class="fas fa-check-circle"></i> Entrenamiento coreográfico</li>
+                <li><i class="fas fa-check-circle"></i> Desarrollo de habilidades acuáticas</li>
+                <li><i class="fas fa-check-circle"></i> Presentaciones periódicas</li>
+              </ul>
+              <a href="#" class="program-button">Inscribirme</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Programa 3: Clavado -->
+      <div class="program-box" id="buceo">
+        <div class="program-image">
+          <img src="img/clavados.jpg" alt="Programa de Clavados">
+          <div class="program-overlay">
+            <h3 class="program-title">Clavados</h3>
+            <div class="program-info">
+              <h3 class="info-title">Clavados</h3>
+              <p class="program-description">
+                realizar saltos ornamentales desde una plataforma de 10 metros o desde un trampolín de 3 y 1 metro, introduciendo el cuerpo en el agua con elegancia y suavidad
+              </p>
+              <ul class="program-features">
+                <li><i class="fas fa-check-circle"></i> Instructores certificados</li>
+                <li><i class="fas fa-check-circle"></i> técnicas como fuerza, coordinación, equilibri</li>
+                <li><i class="fas fa-check-circle"></i> Teoría y práctica combinadas</li>
+                <li><i class="fas fa-check-circle"></i> profundidad adecuada (mínimo 5 metros para plataformas)</li>
+              </ul>
+              <a href="#" class="program-button">Inscribirme</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Programa 4: Principiantes -->
+      <div class="program-box" id="principiantes">
+        <div class="program-image">
+          <img src="img/principiante.jpg" alt="Natación para Principiantes">
+          <div class="program-overlay">
+            <h3 class="program-title">Principiantes</h3>
+            <div class="program-info">
+              <h3 class="info-title">Natación para Principiantes</h3>
+              <p class="program-description">
+                Programa diseñado para quienes dan sus primeros pasos en la natación. Aprende desde la familiarización con el agua hasta las técnicas básicas de los cuatro estilos.
+              </p>
+              <ul class="program-features">
+                <li><i class="fas fa-check-circle"></i> Grupos reducidos</li>
+                <li><i class="fas fa-check-circle"></i> Metodología progresiva</li>
+                <li><i class="fas fa-check-circle"></i> Atención personalizada</li>
+                <li><i class="fas fa-check-circle"></i> Ambiente seguro y divertido</li>
+              </ul>
+              <a href="#" class="program-button">Inscribirme</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Scroll to top button -->
+  <div class="scroll-top" id="scrollTop">
+    <i class="fas fa-arrow-up"></i>
+  </div>
+  
+  <!-- JavaScript para funcionalidad -->
+  <script>
+    // Elements
+    const header = document.getElementById('header');
+    const menuToggle = document.getElementById('menuToggle');
+    const rightMenu = document.getElementById('rightMenu');
+    const menuClose = document.getElementById('menuClose');
+    const overlay = document.getElementById('overlay');
+    const scrollTop = document.getElementById('scrollTop');
+    const programsToggle = document.getElementById('programsToggle');
+    const schedulesToggle = document.getElementById('schedulesToggle');
+    const programsSubmenu = document.getElementById('programsSubmenu');
+    const schedulesSubmenu = document.getElementById('schedulesSubmenu');
+    
+    // Last scroll position for header hide/show
+    let lastScrollY = window.scrollY;
+    
+    // Toggle right menu
+    menuToggle.addEventListener('click', () => {
+      rightMenu.classList.add('active');
+      overlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    });
+    
+    // Close right menu
+    menuClose.addEventListener('click', closeMenu);
+    overlay.addEventListener('click', closeMenu);
+    
+    function closeMenu() {
+      rightMenu.classList.remove('active');
+      overlay.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+    
+    // Toggle submenu for Programs
+    programsToggle.addEventListener('click', (e) => {
+      e.preventDefault();
+      programsSubmenu.classList.toggle('active');
+      
+      // Close the other submenu if it's open
+      if (schedulesSubmenu.classList.contains('active')) {
+        schedulesSubmenu.classList.remove('active');
+      }
+    });
+    
+    // Toggle submenu for Schedules
+    schedulesToggle.addEventListener('click', (e) => {
+      e.preventDefault();
+      schedulesSubmenu.classList.toggle('active');
+      
+      // Close the other submenu if it's open
+      if (programsSubmenu.classList.contains('active')) {
+        programsSubmenu.classList.remove('active');
+      }
+    });
+    
+    // Hide/show header on scroll
+    window.addEventListener('scroll', () => {
+      const currentScrollY = window.scrollY;
+      
+      // Show/hide scroll to top button
+      if (currentScrollY > 300) {
+        scrollTop.classList.add('active');
+      } else {
+        scrollTop.classList.remove('active');
+      }
+      
+      // Hide/show header
+      if (currentScrollY > lastScrollY && currentScrollY > 100) {
+        header.classList.add('hidden');
+      } else {
+        header.classList.remove('hidden');
+      }
+      
+      lastScrollY = currentScrollY;
+    });
+    
+    // Scroll to top functionality
+    scrollTop.addEventListener('click', () => {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    });
+    
+    // Animation for cards on scroll
+    const cards = document.querySelectorAll('.card');
+    
+    function checkCards() {
+      const triggerBottom = window.innerHeight * 0.8;
+      
+      cards.forEach(card => {
+        const cardTop = card.getBoundingClientRect().top;
+        
+        if (cardTop < triggerBottom) {
+          card.style.opacity = '1';
+          card.style.transform = 'translateY(0)';
+        }
+      });
+    }
+    
+    window.addEventListener('scroll', checkCards);
+    checkCards(); // Check on page load
+
+     // Función para detectar cuando los elementos entran en el viewport
+     function checkPrograms() {
+      const programBoxes = document.querySelectorAll('.program-box');
+      const triggerBottom = window.innerHeight * 0.8;
+      
+      programBoxes.forEach(box => {
+        const boxTop = box.getBoundingClientRect().top;
+        
+        if (boxTop < triggerBottom) {
+          box.classList.add('show');
+        }
+      });
+    }
+    
+    // Actualizar el menú para que incluya los nuevos programas
+    function updateMenu() {
+      // Obtener el elemento de submenú de programas
+      const programsSubmenu = document.getElementById('programsSubmenu');
+      
+      // Verificar que existe
+      if (programsSubmenu) {
+        // Añadir los nuevos enlaces
+        programsSubmenu.innerHTML = `
+          <a href="#competencias" class="right-submenu-item">Competencias</a>
+          <a href="#sincronizado" class="right-submenu-item">Nado sincronizado</a>
+          <a href="#buceo" class="right-submenu-item">Clavado</a> 
+          <a href="#principiantes" class="right-submenu-item">Principiantes</a>
+        `;
+        
+        // Añadir event listeners a los nuevos enlaces
+        const menuLinks = programsSubmenu.querySelectorAll('a');
+        menuLinks.forEach(link => {
+          link.addEventListener('click', () => {
+            // Cerrar el menú
+            document.getElementById('rightMenu').classList.remove('active');
+            document.getElementById('overlay').classList.remove('active');
+            document.body.style.overflow = '';
+            
+            // Si tiene un href con un ID, hacer scroll a ese elemento
+            const target = link.getAttribute('href');
+            if (target && target.startsWith('#') && target.length > 1) {
+              const targetElement = document.querySelector(target);
+              if (targetElement) {
+                setTimeout(() => {
+                  targetElement.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'center'
+                  });
+                  
+                  // Efecto especial para destacar el elemento al que se ha navegado
+                  targetElement.classList.add('highlight');
+                  setTimeout(() => {
+                    targetElement.classList.remove('highlight');
+                  }, 2000);
+                }, 300);
+              }
+            }
+          });
+        });
+      }
+    }
+    
+    // Estilos para el efecto de destacado
+    const highlightStyle = document.createElement('style');
+    highlightStyle.textContent = `
+      .program-box.highlight {
+        animation: highlight 2s ease;
+      }
+      
+      @keyframes highlight {
+        0%, 100% {
+          box-shadow: 0 12px 30px rgba(0, 51, 85, 0.12);
+        }
+        50% {
+          box-shadow: 0 0 25px 5px rgba(5, 209, 251, 0.7);
+        }
+      }
+    `;
+    document.head.appendChild(highlightStyle);
+    
+    // Añadir los event listeners cuando el DOM esté cargado
+    document.addEventListener('DOMContentLoaded', () => {
+      window.addEventListener('scroll', checkPrograms);
+      checkPrograms(); // Comprobar en la carga inicial
+      updateMenu(); // Actualizar el menú
+      
+      // Añadir comportamiento de scroll suave para todos los enlaces internos
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+          const target = this.getAttribute('href');
+          if (target && target.length > 1) {
+            const targetElement = document.querySelector(target);
+            if (targetElement) {
+              e.preventDefault();
+              targetElement.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center'
+              });
+            }
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>
