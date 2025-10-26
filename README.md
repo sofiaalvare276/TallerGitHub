@@ -38,3 +38,5 @@ Este reto consistió en subir un proyecto personal (`index.html` y carpeta `img`
    - Actualicé este `README.md` para incluir los pasos del reto final.
    - Agregué los cambios con `git add README.md` y commit: `git commit -m "Documentar el proceso del reto final en README.md"`.
    - Subí los cambios a GitHub con `git push origin master`.
+
+   .....
